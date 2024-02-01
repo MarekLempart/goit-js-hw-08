@@ -17,3 +17,9 @@ const storedTime = localStorage.getItem('videoplayer-current-time');
 if (storedTime) {
   player.setCurrentTime(parseFloat(storedTime));
 }
+
+// Inicjalizacja odtwarzacza
+player.ready().then(() => {
+  // Opcjonalne: Możesz dodać dodatkową logikę po zainicjowaniu odtwarzacza
+  console.log('Odtwarzacz Vimeo gotowy.');
+});

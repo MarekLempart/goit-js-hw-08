@@ -1,33 +1,78 @@
+// Importuje zewnętrzną bibliotekę Vimeo
 import Vimeo from '@vimeo/player';
 import throttle from 'lodash.throttle';
 
-// const player = new Vimeo(document.querySelectorAll('#vimeo-player'));
-const player = new Vimeo(document.getElementById('vimeo-player'));
+// Dodaje definicję klasy VideoHandler
+class VideoHandler {
+  constructor(player) {
+    this.player = player;
+  }
 
-player.ready().then(() => {
-  // "Install Vimeo player."
-  console.log('The player Vimeo is ready'); // "Initializing Vimeo player."
-
-  player.on('play', () => {
-    player.on(
+  // Metoda obsługująca zdarzenie odtwarzania
+  handlePlay() {
+    this.player.on(
       'timeupdate',
       throttle(() => {
-        const currentTime = player.getCurrentTime();
-        const duration = player.getDuration();
+        const currentTime = this.player.getCurrentTime();
+        const duration = this.player.getDuration();
 
-        // "Check if 'currentTime' is within the length of the video."
-        if (currentTime >= 0 && currentTime <= duration) {
+        if (currentTime > 0 && currentTime <= duration) {
           localStorage.setItem('videoplayer-current-time', currentTime);
         }
       }, 1000)
     );
-  });
-
-  const storedTime = localStorage.getItem('videoplayer-current-time');
-  if (storedTime) {
-    player.setCurrentTime(parseFloat(storedTime));
   }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const player = new Vimeo(document.getElementById('vimeo-player'));
+
+  player.ready().then(() => {
+    console.log('The player Vimeo is ready');
+
+    const videoHandler = new VideoHandler(player);
+
+    player.on('play', () => {
+      videoHandler.handlePlay();
+    });
+
+    const storedTime = localStorage.getItem('videoplayer-current-time');
+    if (storedTime) {
+      player.setCurrentTime(parseFloat(storedTime));
+    }
+  });
 });
+
+// import Vimeo from '@vimeo/player';
+// import throttle from 'lodash.throttle';
+
+// // const player = new Vimeo(document.querySelectorAll('#vimeo-player'));
+// const player = new Vimeo(document.getElementById('vimeo-player'));
+
+// player.ready().then(() => {
+//   // "Install Vimeo player."
+//   console.log('The player Vimeo is ready'); // "Initializing Vimeo player."
+
+//   player.on('play', () => {
+//     player.on(
+//       'timeupdate',
+//       throttle(() => {
+//         const currentTime = player.getCurrentTime();
+//         const duration = player.getDuration();
+
+//         // "Check if 'currentTime' is within the length of the video."
+//         if (currentTime > 0 && currentTime <= duration) {
+//           localStorage.setItem('videoplayer-current-time', currentTime);
+//         }
+//       }, 1000)
+//     );
+//   });
+
+//   const storedTime = localStorage.getItem('videoplayer-current-time');
+//   if (storedTime) {
+//     player.setCurrentTime(parseFloat(storedTime));
+//   }
+// });
 
 // // "Install Vimeo player."
 // player.ready().then(() => {

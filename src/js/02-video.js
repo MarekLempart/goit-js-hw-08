@@ -1,47 +1,84 @@
-// Importuje zewnętrzną bibliotekę Vimeo
-import Vimeo from '@vimeo/player';
+import Player from '@vimeo/player';
 import throttle from 'lodash.throttle';
 
-// Dodaje definicję klasy VideoHandler
-class VideoHandler {
-  constructor(player) {
-    this.player = player;
+const iframe = document.querySelector('#vimeo-player');
+const player = new Player(iframe);
+
+const onPlay = data => {
+  try {
+    const currentTime = JSON.stringify(data.seconds);
+    localStorage.setItem('videoplayer-current-time', currentTime);
+  } catch (error) {
+    console.log(error);
   }
+};
 
-  // Metoda obsługująca zdarzenie odtwarzania
-  handlePlay() {
-    this.player.on(
-      'timeupdate',
-      throttle(() => {
-        const currentTime = this.player.getCurrentTime();
-        const duration = this.player.getDuration();
+const throttlePlay = throttle(onPlay, 1000);
 
-        if (currentTime > 0 && currentTime <= duration) {
-          localStorage.setItem('videoplayer-current-time', currentTime);
-        }
-      }, 1000)
-    );
+player.on('timeupdate', throttlePlay);
+
+try {
+  player.setCurrentTime(
+    JSON.parse(localStorage.getItem('videoplayer-current-time'))
+  );
+} catch (error) {
+  switch (error.name) {
+    case 'RangeError':
+      console.log(
+        'The time was less than 0 or greater than the video’s duration'
+      );
+      break;
+
+    default:
+      console.log('An error occured');
+      break;
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const player = new Vimeo(document.getElementById('vimeo-player'));
+// // Importuje zewnętrzną bibliotekę Vimeo
+// import Vimeo from '@vimeo/player';
+// import throttle from 'lodash.throttle';
 
-  player.ready().then(() => {
-    console.log('The player Vimeo is ready');
+// // Dodaje definicję klasy VideoHandler
+// class VideoHandler {
+//   constructor(player) {
+//     this.player = player;
+//   }
 
-    const videoHandler = new VideoHandler(player);
+//   // Metoda obsługująca zdarzenie odtwarzania
+//   handlePlay() {
+//     this.player.on(
+//       'timeupdate',
+//       throttle(() => {
+//         const currentTime = this.player.getCurrentTime();
+//         const duration = this.player.getDuration();
 
-    player.on('play', () => {
-      videoHandler.handlePlay();
-    });
+//         if (currentTime > 0 && currentTime <= duration) {
+//           localStorage.setItem('videoplayer-current-time', currentTime);
+//         }
+//       }, 1000)
+//     );
+//   }
+// }
 
-    const storedTime = localStorage.getItem('videoplayer-current-time');
-    if (storedTime) {
-      player.setCurrentTime(parseFloat(storedTime));
-    }
-  });
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//   const player = new Vimeo(document.getElementById('vimeo-player'));
+
+//   player.ready().then(() => {
+//     console.log('The player Vimeo is ready');
+
+//     const videoHandler = new VideoHandler(player);
+
+//     player.on('play', () => {
+//       videoHandler.handlePlay();
+//     });
+
+//     const storedTime = localStorage.getItem('videoplayer-current-time');
+//     if (storedTime) {
+//       player.setCurrentTime(parseFloat(storedTime));
+//     }
+//   });
+// });
 
 // import Vimeo from '@vimeo/player';
 // import throttle from 'lodash.throttle';

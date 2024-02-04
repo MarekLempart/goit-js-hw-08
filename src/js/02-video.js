@@ -1,9 +1,9 @@
-// ---- kod 04 ----
+// ---- kod 04a ----
 import Vimeo from '@vimeo/player';
 import throttle from 'lodash.throttle';
 
 const iframe = document.querySelector('#vimeo-player');
-const player = new Vimeo(iframe);
+const player = new Vimeo(document.getElementById('vimeo-player'));
 
 const onPlay = data => {
   const currentTime = JSON.stringify(data.seconds);
@@ -11,123 +11,31 @@ const onPlay = data => {
 };
 
 const throttlePlay = throttle(onPlay, 1000);
-
 player.on('timeupdate', throttlePlay);
 
 player.setCurrentTime(
   JSON.parse(localStorage.getItem('videoplayer-current-time'))
 );
 
-// // ---- kod 02 ----
+// // ---- kod 04 ----
 // import Vimeo from '@vimeo/player';
 // import throttle from 'lodash.throttle';
 
-// // const player = new Vimeo(document.querySelectorAll('#vimeo-player'));
-// const player = new Vimeo(document.getElementById('vimeo-player'));
+// const iframe = document.querySelector('#vimeo-player');
+// const player = new Vimeo(iframe);
 
-// player.ready().then(() => {
-//   // "Install Vimeo player."
-//   console.log('The player Vimeo is ready'); // "Initializing Vimeo player."
+// const onPlay = data => {
+//   const currentTime = JSON.stringify(data.seconds);
+//   localStorage.setItem('videoplayer-current-time', currentTime);
+// };
 
-//   player.on('play', () => {
-//     player.on(
-//       'timeupdate',
-//       throttle(() => {
-//         const currentTime = player.getCurrentTime();
-//         const duration = player.getDuration();
+// const throttlePlay = throttle(onPlay, 1000);
 
-//         // "Check if 'currentTime' is within the length of the video."
-//         if (currentTime > 0 && currentTime <= duration) {
-//           localStorage.setItem('videoplayer-current-time', currentTime);
-//         }
-//       }, 1000)
-//     );
-//   });
+// player.on('timeupdate', throttlePlay);
 
-//   const storedTime = localStorage.getItem('videoplayer-current-time');
-//   if (storedTime) {
-//     player.setCurrentTime(parseFloat(storedTime));
-//   }
-// });
-
-// // ---- kod 01 ----
-// import Vimeo from '@vimeo/player';
-// import throttle from 'lodash.throttle';
-
-// // const player = new Vimeo(document.querySelectorAll('#vimeo-player'));
-// const player = new Vimeo(document.getElementById('vimeo-player'));
-
-// // "Install Vimeo player."
-// player.ready().then(() => {
-//   // "Initializing Vimeo player."
-//   console.log('The player Vimeo is ready');
-
-//   // "Event listeren for 'play' and 'timeupdate'."
-//   player.on('play', () => {
-//     player.on(
-//       'timeupdate',
-//       throttle(() => {
-//         // "Writing the current time to 'localStorage'."
-//         localStorage.setItem(
-//           'videoplayer-current-time',
-//           player.getCurrentTime()
-//         );
-//       }, 1000)
-//     );
-//   });
-
-//   // "Set the current time when the page is reloaded."
-//   const storedTime = localStorage.getItem('videoplayer-current-time');
-//   if (storedTime) {
-//     player.setCurrentTime(parseFloat(storedTime));
-//   }
-// });
-
-// // ---- kod 03 ----
-// // Importuje zewnętrzną bibliotekę Vimeo
-// import Vimeo from '@vimeo/player';
-// import throttle from 'lodash.throttle';
-
-// // Dodaje definicję klasy VideoHandler
-// class VideoHandler {
-//   constructor(player) {
-//     this.player = player;
-//   }
-
-//   // Metoda obsługująca zdarzenie odtwarzania
-//   handlePlay() {
-//     this.player.on(
-//       'timeupdate',
-//       throttle(() => {
-//         const currentTime = this.player.getCurrentTime();
-//         const duration = this.player.getDuration();
-
-//         if (currentTime > 0 && currentTime <= duration) {
-//           localStorage.setItem('videoplayer-current-time', currentTime);
-//         }
-//       }, 1000)
-//     );
-//   }
-// }
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   const player = new Vimeo(document.getElementById('vimeo-player'));
-
-//   player.ready().then(() => {
-//     console.log('The player Vimeo is ready');
-
-//     const videoHandler = new VideoHandler(player);
-
-//     player.on('play', () => {
-//       videoHandler.handlePlay();
-//     });
-
-//     const storedTime = localStorage.getItem('videoplayer-current-time');
-//     if (storedTime) {
-//       player.setCurrentTime(parseFloat(storedTime));
-//     }
-//   });
-// });
+// player.setCurrentTime(
+//   JSON.parse(localStorage.getItem('videoplayer-current-time'))
+// );
 
 // // ---- kod 05 ----
 // import Vimeo from '@vimeo/player';
